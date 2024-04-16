@@ -9,7 +9,7 @@ var __classPrivateFieldGet = (this && this.__classPrivateFieldGet) || function (
     if (typeof state === "function" ? receiver !== state || !f : !state.has(receiver)) throw new TypeError("Cannot read private member from an object whose class did not declare it");
     return kind === "m" ? f : kind === "a" ? f.call(receiver) : f ? f.value : state.get(receiver);
 };
-var _Game_pickedWord, _Game_actualWord, _Game_turn, _Game_actualPosition, _Game_userInterface, _Game_letterChecker, _Game_keyManager;
+var _Game_pickedWord, _Game_actualWord, _Game_turn, _Game_actualPosition, _Game_userInterface, _Game_letterChecker, _Game_keyManager, _Game_observers;
 import { MAX_WORD_SIZE, MAX_ATTEMPTS } from "./env.js";
 import { BackspaceAction, EnterAction, newLetterAction, NoAction } from "./KeyManager/KeyBoardActions.js";
 import { VALID_LETTER_CODES } from "./KeyManager/TransformKeys.js";
@@ -22,8 +22,9 @@ export class Game {
         _Game_userInterface.set(this, void 0);
         _Game_letterChecker.set(this, void 0);
         _Game_keyManager.set(this, void 0);
+        _Game_observers.set(this, []);
         this.updateAfterANewWord = () => {
-            __classPrivateFieldGet(this, _Game_letterChecker, "f").checkLetters(this);
+            this.notificar(this);
             __classPrivateFieldSet(this, _Game_turn, __classPrivateFieldGet(this, _Game_turn, "f") + 1, "f");
             __classPrivateFieldSet(this, _Game_actualPosition, 0, "f");
             __classPrivateFieldSet(this, _Game_actualWord, "", "f");
@@ -31,6 +32,7 @@ export class Game {
         __classPrivateFieldSet(this, _Game_pickedWord, pickedWord, "f");
         __classPrivateFieldSet(this, _Game_userInterface, userInterface, "f");
         __classPrivateFieldSet(this, _Game_letterChecker, letterChecker, "f");
+        this.registrarObservador(letterChecker);
         __classPrivateFieldSet(this, _Game_keyManager, keyManager, "f");
     }
     get pickedWord() {
@@ -74,6 +76,18 @@ export class Game {
     }
     set keyManager(i) {
         __classPrivateFieldSet(this, _Game_keyManager, i, "f");
+    }
+    registrarObservador(observer) {
+        __classPrivateFieldGet(this, _Game_observers, "f").push(observer);
+    }
+    eliminarObservador(observer) {
+        const index = __classPrivateFieldGet(this, _Game_observers, "f").indexOf(observer);
+        if (index !== -1) {
+            __classPrivateFieldGet(this, _Game_observers, "f").splice(index, 1);
+        }
+    }
+    notificar(element) {
+        __classPrivateFieldGet(this, _Game_observers, "f").forEach(observer => observer.update(element));
     }
     checkGameIsFinish() {
         if (__classPrivateFieldGet(this, _Game_actualWord, "f") == __classPrivateFieldGet(this, _Game_pickedWord, "f")) {
@@ -120,4 +134,4 @@ export class Game {
         __classPrivateFieldSet(this, _Game_actualWord, __classPrivateFieldGet(this, _Game_actualWord, "f") + letter, "f");
     }
 }
-_Game_pickedWord = new WeakMap(), _Game_actualWord = new WeakMap(), _Game_turn = new WeakMap(), _Game_actualPosition = new WeakMap(), _Game_userInterface = new WeakMap(), _Game_letterChecker = new WeakMap(), _Game_keyManager = new WeakMap();
+_Game_pickedWord = new WeakMap(), _Game_actualWord = new WeakMap(), _Game_turn = new WeakMap(), _Game_actualPosition = new WeakMap(), _Game_userInterface = new WeakMap(), _Game_letterChecker = new WeakMap(), _Game_keyManager = new WeakMap(), _Game_observers = new WeakMap();

@@ -2,7 +2,11 @@ import { MAX_WORD_SIZE } from "../env.js";
 import { Game } from "../Game.js";
 import { ILetterChecker } from "./ILetterChecker.js";
 
-export class LetterChecker implements ILetterChecker{
+export class LetterChecker implements ILetterChecker, IObserver<Game>{
+
+    update(game : Game): void {
+        this.checkLetters(game);
+    }
 
     countRightLetters(actualTry: string, actualLetter: string, pickedWord: string): number {
         let occurrences: number = 0;

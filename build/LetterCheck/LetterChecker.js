@@ -29,6 +29,9 @@ export class LetterChecker {
             }
         };
     }
+    update(game) {
+        this.checkLetters(game);
+    }
     countRightLetters(actualTry, actualLetter, pickedWord) {
         let occurrences = 0;
         for (let i = 0; i < MAX_WORD_SIZE; i++) {
