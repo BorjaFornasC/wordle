@@ -8,7 +8,7 @@ import { IUIChanger } from "./UserInterface/IUIChanger.js";
 
 const wordsCollection: Word = new Word(["JUEGO", "TALAR", "BAILE", "ANDAR", "MONTE", "PLAYA", "PLATA", "ARBOL", "QUESO", "CORRO", "RAMPA", "RATON", "TECLA", "HORNO", "CELTA", "SALMO",
 "DEDAL", "SONDA", "LAPSO", "SALON", "CESTA", "PESCA", "MAREA", "AUDAZ", "CAÑAS", "TESIS", "DOSIS", "ATRAS", "TEINA", "SUSHI", "CHICO", "LOGRO", "PALOS", "CETRO", "REGAR", "SIGLO", "CUEVA", 
-"VOLAR", "NUNCA", "TEXTO", "TURNO", "GRANO"]);
+"VOLAR", "NUNCA", "TEXTO", "TURNO", "GRANO", "POETA", "JERGA", "BRUJA", "METAL", "BROMA", "REHEN", "LENTO"]);
 const pickedWord: string = wordsCollection.getRandomWord();
 console.log(pickedWord);
 

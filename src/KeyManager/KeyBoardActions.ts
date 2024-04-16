@@ -1,5 +1,6 @@
 import { Game } from "../Game.js";
 
+//Patrón Strategy
 export interface KeyboardAction {
     execute(game: Game): void;
 }
@@ -17,8 +18,13 @@ export class BackspaceAction implements KeyboardAction {
 }
 
 export class newLetterAction implements KeyboardAction {
-    constructor(private code: string) {}
-
+    #code : string
+    constructor(code:string) {
+        this.#code = code;
+    }
+    get code () {
+        return this.#code;
+    }
     execute(game: Game): void {
         game.newLetter(this.code);
     }
@@ -26,7 +32,6 @@ export class newLetterAction implements KeyboardAction {
 
 export class NoAction implements KeyboardAction {
     execute(game: Game): void {
-        // Manejar la situación de "ninguna acción" aquí, si es necesario
         console.log("No action for this key.");
     }
 }

@@ -94,7 +94,6 @@ export class Game {
             location.assign("/winner");
         }
         else if (this.turn == MAX_ATTEMPTS) {
-            //location.assign("/loser");
             location.assign(`/loser?pickedWord=${encodeURIComponent(__classPrivateFieldGet(this, _Game_pickedWord, "f"))}`);
         }
     }
