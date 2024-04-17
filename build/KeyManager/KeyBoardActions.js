@@ -11,13 +11,13 @@ var __classPrivateFieldGet = (this && this.__classPrivateFieldGet) || function (
 };
 var _newLetterAction_code;
 export class EnterAction {
-    execute(game) {
-        game.enterPressed();
+    execute(gameControl) {
+        gameControl.enterPressed();
     }
 }
 export class BackspaceAction {
-    execute(game) {
-        game.backspacePressed();
+    execute(gameControl) {
+        gameControl.backspacePressed();
     }
 }
 export class newLetterAction {
@@ -28,13 +28,13 @@ export class newLetterAction {
     get code() {
         return __classPrivateFieldGet(this, _newLetterAction_code, "f");
     }
-    execute(game) {
-        game.newLetter(this.code);
+    execute(gameControl) {
+        gameControl.newLetter(this.code);
     }
 }
 _newLetterAction_code = new WeakMap();
 export class NoAction {
-    execute(game) {
+    execute(gameControl) {
         console.log("No action for this key.");
     }
 }

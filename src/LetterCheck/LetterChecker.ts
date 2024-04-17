@@ -1,12 +1,9 @@
 import { MAX_WORD_SIZE } from "../env.js";
 import { Game } from "../Game.js";
+import { IUIChanger } from "../UserInterface/IUIChanger.js";
 import { ILetterChecker } from "./ILetterChecker.js";
 
-export class LetterChecker implements ILetterChecker, IObserver<Game>{
-
-    update(game : Game): void {
-        this.checkLetters(game);
-    }
+export class LetterChecker implements ILetterChecker{
 
     countRightLetters(actualTry: string, actualLetter: string, pickedWord: string): number {
         let occurrences: number = 0;
@@ -18,7 +15,7 @@ export class LetterChecker implements ILetterChecker, IObserver<Game>{
         return occurrences;
     }
 
-    changeMisplacedLetters(actualTry: string, actualLetter: string, numberOfCoincidencesPickedWord: number, game: Game): void {
+    changeMisplacedLetters(actualTry: string, actualLetter: string, numberOfCoincidencesPickedWord: number, game: Game, userInterface : IUIChanger): void {
         let isFirst = true;
         const MAX_MISPLACED_WITH_RIGHT_LETTERS = 1;
         const MIN_COINCIDENCES = 1;
@@ -27,25 +24,25 @@ export class LetterChecker implements ILetterChecker, IObserver<Game>{
                 if (numberOfCoincidencesPickedWord > MIN_COINCIDENCES) {
                     if (this.countRightLetters(actualTry, actualLetter, game.pickedWord) > MAX_MISPLACED_WITH_RIGHT_LETTERS) {
                         if (actualTry[i] !== game.pickedWord[i]) {
-                            game.userInterface.changeBackgroundPosition(game.turn, i, "wrongLetter");
+                            userInterface.changeBackgroundPosition(game.turn, i, "wrongLetter");
                         }
                     } else {
                         if (isFirst) {
                             isFirst = false;
                         } else {
                             if (actualTry[i] !== game.pickedWord[i]) {
-                                game.userInterface.changeBackgroundPosition(game.turn, i, "wrongLetter");
+                                userInterface.changeBackgroundPosition(game.turn, i, "wrongLetter");
                             }
                         }
                     }
                 } else if (actualTry[i] !== game.pickedWord[i]) {
-                    game.userInterface.changeBackgroundPosition(game.turn, i, "wrongLetter");
+                    userInterface.changeBackgroundPosition(game.turn, i, "wrongLetter");
                 }
             }
         }
     }
 
-    checkLetters = (game : Game): void => {
+    checkLetters = (game : Game, userInterface : IUIChanger): void => {
         let actualLetter: string = "";
         let pattern: RegExp;
         let numberOfCoincidencesPickedWord: number = 0;
@@ -63,12 +60,12 @@ export class LetterChecker implements ILetterChecker, IObserver<Game>{
             if (numberOfCoincidencesPickedWord > MIN_COINCIDENCES) {
                 if (actualLetter == game.pickedWord[i]) {
                     stringToPaint = "rightLetter";
-                    this.changeMisplacedLetters(actualTry, actualLetter, numberOfCoincidencesPickedWord, game);
+                    this.changeMisplacedLetters(actualTry, actualLetter, numberOfCoincidencesPickedWord, game, userInterface);
                 } else {
                    stringToPaint = this.checkMisplacedLetters(numberOfCoincidencesActualTry, numberOfCoincidencesPickedWord);
                 }
             }
-            game.userInterface.changeBackgroundPosition(game.turn, i, stringToPaint);
+            userInterface.changeBackgroundPosition(game.turn, i, stringToPaint);
         }
     }
     

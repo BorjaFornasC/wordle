@@ -1,4 +1,4 @@
-//Patrón Observer
+
 interface IObserver <T>{
     update(element : T): void;
 }

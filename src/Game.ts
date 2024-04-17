@@ -1,26 +1,11 @@
-import { MAX_WORD_SIZE, MAX_ATTEMPTS } from "./env.js";
-import { ILetterChecker } from "./LetterCheck/ILetterChecker.js";
-import { IUIChanger } from "./UserInterface/IUIChanger.js";
-import { BackspaceAction, EnterAction, KeyboardAction, newLetterAction, NoAction } from "./KeyManager/KeyBoardActions.js";
-import { VALID_LETTER_CODES } from "./KeyManager/TransformKeys.js";
-import { LetterChecker } from "./LetterCheck/LetterChecker.js";
-
-export class Game implements INotifier<Game>{
+export class Game{
     #pickedWord: string
     #actualWord: string = ""
     #turn: number = 1
     #actualPosition: number = 0
-    #userInterface: IUIChanger
-    #letterChecker : ILetterChecker
-    #keyManager : ITransformKeys
-    #observers : IObserver<Game>[] = [];
 
-    constructor(pickedWord: string, userInterface: IUIChanger, letterChecker : LetterChecker, keyManager : ITransformKeys) {
+    constructor(pickedWord: string) {
         this.#pickedWord = pickedWord;
-        this.#userInterface = userInterface;
-        this.#letterChecker = letterChecker;
-        this.registrarObservador(letterChecker);
-        this.#keyManager = keyManager;
     }
 
     get pickedWord() {
@@ -50,94 +35,19 @@ export class Game implements INotifier<Game>{
     set actualPosition(num) {
         this.#actualPosition = num;
     }
-
-    get userInterface() {
-        return this.#userInterface;
-    }
-    set userInterface(i) {
-        this.#userInterface = i;
-    }
-
-    get letterChecker() {
-        return this.#letterChecker;
-    }
-    set letterChecker(i) {
-        this.#letterChecker = i;
-    }
-
-    get keyManager() {
-        return this.#keyManager;
-    }
-    set keyManager(i) {
-        this.#keyManager = i;
-    }
-
-    registrarObservador(observer: IObserver<Game>): void {
-        this.#observers.push(observer)
-    }
-
-    eliminarObservador(observer: IObserver<Game>): void {
-        const index = this.#observers.indexOf(observer);
-        if (index !== -1) {
-            this.#observers.splice(index, 1);
-        }
-    }
-
-    notificar(element: Game): void {
-        this.#observers.forEach(observer => observer.update(element));
-    }
     
     updateAfterANewWord = (): void => {
-        this.notificar(this);
         this.#turn = this.#turn + 1;
         this.#actualPosition = 0;
         this.#actualWord = "";
     }
-
-    checkGameIsFinish(): void {
-        if (this.#actualWord == this.#pickedWord) {
-            location.assign("/winner");
-        } else if (this.turn == MAX_ATTEMPTS) {
-            location.assign(`/loser?pickedWord=${encodeURIComponent(this.#pickedWord)}`);
-        }
-    }
     
-    enterPressed(): void {
-        if (this.#actualWord.length == MAX_WORD_SIZE) {
-            this.checkGameIsFinish();
-            for (let i = 0; i < MAX_WORD_SIZE; i++) {
-                this.#userInterface.changeBackgroundKey(this.#keyManager.transformLetterToKey(this.#actualWord[i]));
-            }
-            this.updateAfterANewWord();
-        }
+    deleteLetterToActualWord() : void {
+        this.#actualPosition -= 1;
+        this.#actualWord = this.#actualWord.slice(0, this.#actualPosition);
     }
 
-    backspacePressed(): void {
-        if (this.#actualPosition > 0) {
-            this.#actualPosition -= 1;
-            this.#actualWord = this.#actualWord.slice(0, this.#actualPosition);
-            this.#userInterface.deleteLetter(this.#turn, this.#actualPosition);
-        }
-    }
-
-    newKeyPressed(code: string): void {
-        let action: KeyboardAction = new NoAction;
-    
-        if (VALID_LETTER_CODES.includes(code) && this.#actualPosition < MAX_WORD_SIZE) {
-            action = new newLetterAction(code);
-        } else if (code == "Enter") {
-            action = new EnterAction();
-        } else if (code == "Backspace") {
-            action = new BackspaceAction();
-        }
-
-        action.execute(this);
-    }
-    
-
-    newLetter(code: string): void {
-        let letter: string = this.#keyManager.transformKeyToLetter(code);
-        this.#userInterface.setNewLetter(this.turn, this.actualPosition, letter);
+    addNewLetterToActualWord(letter : string) : void {
         this.#actualPosition = this.#actualPosition + 1;
         this.#actualWord += letter;
     }

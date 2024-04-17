@@ -1,19 +1,19 @@
-import { Game } from "../Game.js";
+import { GameController } from "../GameController.js";
 
-//Patrón Strategy
+
 export interface KeyboardAction {
-    execute(game: Game): void;
+    execute(gameControl: GameController): void;
 }
 
 export class EnterAction implements KeyboardAction {
-    execute(game: Game): void {
-        game.enterPressed();
+    execute(gameControl: GameController): void {
+        gameControl.enterPressed();
     }
 }
 
 export class BackspaceAction implements KeyboardAction {
-    execute(game: Game): void {
-        game.backspacePressed();
+    execute(gameControl: GameController): void {
+        gameControl.backspacePressed();
     }
 }
 
@@ -25,13 +25,13 @@ export class newLetterAction implements KeyboardAction {
     get code () {
         return this.#code;
     }
-    execute(game: Game): void {
-        game.newLetter(this.code);
+    execute(gameControl: GameController): void {
+        gameControl.newLetter(this.code);
     }
 }
 
 export class NoAction implements KeyboardAction {
-    execute(game: Game): void {
+    execute(gameControl: GameController): void {
         console.log("No action for this key.");
     }
 }

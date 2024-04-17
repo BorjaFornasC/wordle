@@ -1,7 +1,7 @@
 import { MAX_WORD_SIZE } from "../env.js";
 export class LetterChecker {
     constructor() {
-        this.checkLetters = (game) => {
+        this.checkLetters = (game, userInterface) => {
             let actualLetter = "";
             let pattern;
             let numberOfCoincidencesPickedWord = 0;
@@ -19,18 +19,15 @@ export class LetterChecker {
                 if (numberOfCoincidencesPickedWord > MIN_COINCIDENCES) {
                     if (actualLetter == game.pickedWord[i]) {
                         stringToPaint = "rightLetter";
-                        this.changeMisplacedLetters(actualTry, actualLetter, numberOfCoincidencesPickedWord, game);
+                        this.changeMisplacedLetters(actualTry, actualLetter, numberOfCoincidencesPickedWord, game, userInterface);
                     }
                     else {
                         stringToPaint = this.checkMisplacedLetters(numberOfCoincidencesActualTry, numberOfCoincidencesPickedWord);
                     }
                 }
-                game.userInterface.changeBackgroundPosition(game.turn, i, stringToPaint);
+                userInterface.changeBackgroundPosition(game.turn, i, stringToPaint);
             }
         };
-    }
-    update(game) {
-        this.checkLetters(game);
     }
     countRightLetters(actualTry, actualLetter, pickedWord) {
         let occurrences = 0;
@@ -41,7 +38,7 @@ export class LetterChecker {
         }
         return occurrences;
     }
-    changeMisplacedLetters(actualTry, actualLetter, numberOfCoincidencesPickedWord, game) {
+    changeMisplacedLetters(actualTry, actualLetter, numberOfCoincidencesPickedWord, game, userInterface) {
         let isFirst = true;
         const MAX_MISPLACED_WITH_RIGHT_LETTERS = 1;
         const MIN_COINCIDENCES = 1;
@@ -50,7 +47,7 @@ export class LetterChecker {
                 if (numberOfCoincidencesPickedWord > MIN_COINCIDENCES) {
                     if (this.countRightLetters(actualTry, actualLetter, game.pickedWord) > MAX_MISPLACED_WITH_RIGHT_LETTERS) {
                         if (actualTry[i] !== game.pickedWord[i]) {
-                            game.userInterface.changeBackgroundPosition(game.turn, i, "wrongLetter");
+                            userInterface.changeBackgroundPosition(game.turn, i, "wrongLetter");
                         }
                     }
                     else {
@@ -59,13 +56,13 @@ export class LetterChecker {
                         }
                         else {
                             if (actualTry[i] !== game.pickedWord[i]) {
-                                game.userInterface.changeBackgroundPosition(game.turn, i, "wrongLetter");
+                                userInterface.changeBackgroundPosition(game.turn, i, "wrongLetter");
                             }
                         }
                     }
                 }
                 else if (actualTry[i] !== game.pickedWord[i]) {
-                    game.userInterface.changeBackgroundPosition(game.turn, i, "wrongLetter");
+                    userInterface.changeBackgroundPosition(game.turn, i, "wrongLetter");
                 }
             }
         }
